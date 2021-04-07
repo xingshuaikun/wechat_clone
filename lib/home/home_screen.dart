@@ -7,21 +7,21 @@ enum ActionItems {
 
 class NavigationIconView {
   final String _title;
-  final IconData _icon;
-  final IconData _activeIcon;
+  /*final IconData _icon;
+  final IconData _activeIcon;*/
   final BottomNavigationBarItem item;
 
   NavigationIconView({Key key, String title, IconData icon, IconData activeIcon}) :
     _title = title,
-    _icon = icon,
-    _activeIcon = activeIcon,
+    /*_icon = icon,
+    _activeIcon = activeIcon,*/
     item = BottomNavigationBarItem(
-      icon: Icon(icon, color: Color(AppColors.TabIconNormal)),
-      activeIcon: Icon(activeIcon, color: Color(AppColors.TabIconActive)),
-      title: Text(title, style: TextStyle(
+      icon: Icon(icon/*, color: Color(AppColors.TabIconNormal)*/),
+      activeIcon: Icon(activeIcon/*, color: Color(AppColors.TabIconActive)*/),
+      title: Text(title/*, style: TextStyle(
         fontSize: 14.0,
         color: Color(AppColors.TabIconNormal)
-      )),
+      )*/),
       backgroundColor: Colors.white,
     );
 }
@@ -31,7 +31,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  PageController _pageController;
+  int _currentIndex  = 0;
   List<NavigationIconView> _navigationViews;
+  List<Widget> _pages;
 
   void initState() {
     super.initState();
@@ -81,6 +84,13 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     ];
+    _pageController = PageController(initialPage: _currentIndex);
+    _pages = [
+      Container(color: Colors.red),
+      Container(color: Colors.green),
+      Container(color: Colors.blue),
+      Container(color: Colors.brown),
+    ];
   }
 
 _build_PopupMunuItem(int iconName, String title) {
@@ -99,19 +109,26 @@ _build_PopupMunuItem(int iconName, String title) {
   @override
   Widget build(BuildContext context) {
     final BottomNavigationBar botNavBar = BottomNavigationBar(
+      fixedColor: const Color(AppColors.TabIconActive),
       items: _navigationViews.map((NavigationIconView view) {
         return view.item;
       }).toList(),
-      currentIndex: 0,
+      currentIndex: _currentIndex,
       type: BottomNavigationBarType.fixed,
       onTap: (int index) {
-        print('点击的是第$index个Tab');
+        setState(() {
+          _currentIndex = index;
+
+          _pageController.animateToPage(_currentIndex, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
+        });
       }
     );
 
     return Scaffold(
       appBar: AppBar(
         title: Text('微信'),
+        // 去除appBar下面的阴影
+        elevation: 0.0,
         actions: [
           IconButton(
             icon: Icon(IconData(
@@ -155,8 +172,17 @@ _build_PopupMunuItem(int iconName, String title) {
           Container(width: 16.0),
         ],
       ),
-      body: Container(
-        color: Colors.red,
+      body: PageView.builder(
+        itemBuilder: (BuildContext context, int index) {
+          return _pages[index];
+        },
+        controller: _pageController,
+        itemCount: _pages.length,
+        onPageChanged: (int index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
       ),
       bottomNavigationBar: botNavBar,
     ); 
