@@ -89,9 +89,9 @@ _build_PopupMunuItem(int iconName, String title) {
       Icon(IconData(
         iconName,
         fontFamily: Constants.IconFontFamily,
-      )),
+      ), size: 22.0, color: const Color(AppColors.AppBarPopupMenuColor)),
       Container(width: 12.0),
-      Text(title),
+      Text(title, style: TextStyle(color: const Color(AppColors.AppBarPopupMenuColor))),
     ],
   );
 }
