@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './constants.dart' show Constants;
+import './constants.dart' show Constants, AppColors;
 
 class NavigationIconView {
   final String _title;
@@ -12,9 +12,12 @@ class NavigationIconView {
     _icon = icon,
     _activeIcon = activeIcon,
     item = BottomNavigationBarItem(
-      icon: Icon(icon),
-      activeIcon: Icon(activeIcon),
-      title: Text(title),
+      icon: Icon(icon, color: Color(AppColors.TabIconNormal)),
+      activeIcon: Icon(activeIcon, color: Color(AppColors.TabIconActive)),
+      title: Text(title, style: TextStyle(
+        fontSize: 14.0,
+        color: Color(AppColors.TabIconNormal)
+      )),
       backgroundColor: Colors.white,
     );
 }
