@@ -11,6 +11,79 @@ class _ConversationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 根据图片的获取方式初始化头像组件
+    Widget avatar;
+    if(conversation.isAvatarFromNet()) {
+      avatar = Image.network(
+        conversation.avatar,
+        width: Constants.ConversationAvatarSize,
+        height: Constants.ConversationAvatarSize,
+      );
+    }
+    else {
+      avatar = Image.asset(
+        conversation.avatar,
+        width: Constants.ConversationAvatarSize,
+        height: Constants.ConversationAvatarSize,
+      );
+    }
+
+    Widget avatarContainer;
+    if(conversation.unreadMsgCount > 0) {
+      // 未读消息角标
+      Widget unreadMsgCountText = Container(
+        width: Constants.UnReadMsgNotifyDotSize,
+        height: Constants.UnReadMsgNotifyDotSize,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(Constants.UnReadMsgNotifyDotSize / 2.0),
+          color: Color(AppColors.NotifyDotBg),
+        ),
+        child: Text(conversation.unreadMsgCount.toString(), style: AppStyles.UnreadMsgCountDotStyle),
+      );
+
+      avatarContainer = Stack(
+        overflow: Overflow.visible,
+        children: <Widget>[
+          avatar,
+          Positioned(
+            right: -6.0,
+            top: -6.0,
+            child: unreadMsgCountText
+          ),
+        ],
+      );
+    }
+    else {
+      avatarContainer = avatar;
+    }
+
+    // 勿扰模式图标
+    var _rightArea = <Widget> [
+      Text(conversation.updateAt, style: AppStyles.DesStyle),
+      SizedBox(height: 10.0),
+    ];
+    if(conversation.isMute) {
+      _rightArea.add(
+        Icon(IconData(
+          0xe610,
+          fontFamily: Constants.IconFontFamily), 
+          color: Color(AppColors.ConversationMuteIcon), 
+          size: Constants.ConversationMuteIconSize
+        )
+      );
+    }
+    else {
+      _rightArea.add(
+        Icon(IconData(
+          0xe610,
+          fontFamily: Constants.IconFontFamily), 
+          color: Colors.transparent,
+          size: Constants.ConversationMuteIconSize
+        )
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.all(10.0),
       // 分割线
@@ -26,11 +99,7 @@ class _ConversationItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Image.asset(
-            'assets/images/default_nor_avatar.png', 
-            width: Constants.ConversationAvatarSize,
-            height: Constants.ConversationAvatarSize,
-          ),
+          avatarContainer,
           Container(width: 10.0),
           Expanded(
             child: Column(
@@ -43,9 +112,7 @@ class _ConversationItem extends StatelessWidget {
           ),
           Container(width: 10.0),
           Column(
-            children: <Widget>[
-              Text(conversation.updateAt, style: AppStyles.DesStyle),
-            ],
+            children: _rightArea,
           ),
         ],
       ),

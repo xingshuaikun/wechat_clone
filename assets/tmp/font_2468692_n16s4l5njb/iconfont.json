@@ -6,6 +6,13 @@
   "description": "毕业设计",
   "glyphs": [
     {
+      "icon_id": "8219256",
+      "name": "消息免打扰",
+      "font_class": "xiaoximiandarao",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
       "icon_id": "637761",
       "name": "反馈",
       "font_class": "fankui",

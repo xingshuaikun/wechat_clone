@@ -32,6 +32,14 @@ class Conversation {
   final int unreadMsgCount;
   // 未读消息显示数字还是圆点
   final bool displayDot;
+  // 图片来源于网络还是服务器
+  bool isAvatarFromNet() {
+    if(this.avatar.indexOf('http') == 0 || 
+       this.avatar.indexOf('https') == 0) {
+         return true;
+    }
+    return false;
+  }
 }
 
 const List<Conversation> mockConversations = [
@@ -58,7 +66,7 @@ const List<Conversation> mockConversations = [
     avatar: 'https://randomuser.me/api/portraits/men/42.jpg',
     title: '汤姆丁',
     des: '今晚要一起去吃肯德基吗？',
-    updateAt: '14:56',
+    updateAt: '17:58',
     isMute: true,
     unreadMsgCount: 0,
   ),
@@ -66,7 +74,7 @@ const List<Conversation> mockConversations = [
     avatar: 'https://randomuser.me/api/portraits/men/40.jpg',
     title: 'Tina Morgan',
     des: '晚自习是什么来着？你知道吗，看到的话赶紧回复我',
-    updateAt: '17:58',
+    updateAt: '14:56',
     isMute: false,
     unreadMsgCount: 3,
   ),
