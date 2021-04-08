@@ -60,4 +60,6 @@ class Constants {
   static const ConversationMuteIconSize = 18.0;
   // 设备登陆信息高度
   // static const DeviceInfoItemHeight = 32.0;
+  // 通讯录头像大小
+  static const ContactAvatarSize = 36.0;
 }
