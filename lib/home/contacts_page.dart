@@ -124,6 +124,8 @@ class _ContactsPageState extends State<ContactsPage> {
     super.initState();
     // 链式调用，将通讯录中的好友复制三份
     _contacts..addAll(data.contacts)..addAll(data.contacts)..addAll(data.contacts);
+    // 将联系人列表的好友按字母序升序排序
+    _contacts.sort((Contact a, Contact b) => a.nameIndex.compareTo(b.nameIndex));
   }
 
   @override
@@ -134,11 +136,19 @@ class _ContactsPageState extends State<ContactsPage> {
           return _functionButtons[index];
         }
         int _contactIndex = index - _functionButtons.length;
+        // 相同首字母的联系人排在一个首字母下
+        bool _isGroupTitle = true;
         Contact _contact = _contacts[_contactIndex];
+        if(_contactIndex >= 1 && _contact.nameIndex == _contacts[_contactIndex - 1].nameIndex) {
+          _isGroupTitle = false;
+        }
+        else {
+
+        }
         return _ContactItem(
           avatar: _contact.avatar, 
           title: _contact.name, 
-          groupTitle: _contact.nameIndex
+          groupTitle: _isGroupTitle ? _contact.nameIndex : null,
         );
       },
       itemCount: _contacts.length + _functionButtons.length,

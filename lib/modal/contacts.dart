@@ -85,7 +85,7 @@ class ContactsPageData {
     const Contact(
       avatar: 'https://randomuser.me/api/portraits/men/11.jpg',
       name: '二舅',
-      nameIndex: '',
+      nameIndex: 'E',
     ),
     const Contact(
       avatar: 'https://randomuser.me/api/portraits/women/46.jpg',
