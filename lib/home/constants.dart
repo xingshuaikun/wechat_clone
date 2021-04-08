@@ -26,6 +26,10 @@ class AppColors {
   // 设备登录字体颜色
   static const DeivceInfoItemText = 0xff606062;
   static const DeviceInfoItemIcon = 0xff606062;
+  // 通讯录不同首字母联系人的主题背景颜色
+  static const ContactGroupTitleBg = 0xffebebeb;
+  // 通讯录不同首字母联系人的字体颜色
+  static const ContactGroupTitleText = 0xff888888;
 }
 
 class AppStyles {
@@ -45,6 +49,11 @@ class AppStyles {
   static const DeviceInfoItemTextStyle = TextStyle(
     fontSize: 13.0,
     color: Color(AppColors.DeivceInfoItemText),
+  );
+  // 通讯录不同首字母联系人的字母字体
+  static const GroupTitleItemTextStyle = TextStyle(
+    fontSize: 14.0,
+    color: Color(AppColors.ContactGroupTitleText),
   );
 }
 
