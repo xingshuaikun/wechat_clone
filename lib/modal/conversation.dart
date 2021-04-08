@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_wechat_clone/home/conversation_page.dart';
 import '../home/constants.dart' show AppColors;
 
+// 此处是模拟登陆信息的图标，实际开发需要从后端传过来具体数据
+enum Device {
+  MAC, WIN
+}
+
 class Conversation {
   const Conversation({
     // @required表示不能省略
@@ -118,3 +123,8 @@ const List<Conversation> mockConversations = [
     unreadMsgCount: 0,
   ),
 ];
+
+const Map<String, List<Conversation>> mockconversationData = {
+  'deviceInfo': null,
+  'conversations': mockConversations
+};

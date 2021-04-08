@@ -6,6 +6,20 @@
   "description": "毕业设计",
   "glyphs": [
     {
+      "icon_id": "837331",
+      "name": "windows",
+      "font_class": "windows",
+      "unicode": "e86f",
+      "unicode_decimal": 59503
+    },
+    {
+      "icon_id": "2901872",
+      "name": "Mac",
+      "font_class": "Mac",
+      "unicode": "e640",
+      "unicode_decimal": 58944
+    },
+    {
       "icon_id": "8219256",
       "name": "消息免打扰",
       "font_class": "xiaoximiandarao",

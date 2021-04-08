@@ -21,6 +21,11 @@ class AppColors {
   static const NotifyDotText = 0xffffffff;
   // 勿扰模式图标颜色
   static const ConversationMuteIcon = 0xffd8d8d8;
+  // 设备登录背景颜色
+  static const DeviceInfoItemBg = 0xfff5f5f5;
+  // 设备登录字体颜色
+  static const DeivceInfoItemText = 0xff606062;
+  static const DeviceInfoItemIcon = 0xff606062;
 }
 
 class AppStyles {
@@ -36,6 +41,11 @@ class AppStyles {
     fontSize: 12.0,
     color: Color(AppColors.NotifyDotText),
   );
+  // 设备登陆信息字体
+  static const DeviceInfoItemTextStyle = TextStyle(
+    fontSize: 13.0,
+    color: Color(AppColors.DeivceInfoItemText),
+  );
 }
 
 class Constants {
@@ -48,4 +58,6 @@ class Constants {
   static const UnReadMsgNotifyDotSize = 20.0;
   // 勿扰模式图标大小
   static const ConversationMuteIconSize = 18.0;
+  // 设备登陆信息高度
+  // static const DeviceInfoItemHeight = 32.0;
 }
