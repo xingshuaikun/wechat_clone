@@ -71,4 +71,6 @@ class Constants {
   // static const DeviceInfoItemHeight = 32.0;
   // 通讯录头像大小
   static const ContactAvatarSize = 36.0;
+  // 通讯录首字母的索引值宽度
+  static const IndexBarWidth = 24.0;
 }

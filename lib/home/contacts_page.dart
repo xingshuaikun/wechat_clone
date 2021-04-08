@@ -46,7 +46,9 @@ class _ContactItem extends StatelessWidget {
 
     // 列表项主题部分
     Widget _button = Container(
-      padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 10.0, bottom: 10.0),
+      // margin 用来设置盒子外边框
+      margin: const EdgeInsets.symmetric(horizontal: 16.0,),
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -86,6 +88,15 @@ class _ContactItem extends StatelessWidget {
     return _itemBody;
   }
 }
+
+const INDEX_BAR_WORDS = {
+  "↑", "☆", 
+  "A", "B", "C", "D", "E", "F", "G", 
+  "H", "I", "J", "K", "L", "M", "N", 
+  "O", "P", "Q", "R", "S", "T", 
+  "U", "V", "W", "X", "Y", "Z", 
+  "#"
+};
 
 class ContactsPage extends StatefulWidget {
   @override
@@ -130,28 +141,44 @@ class _ContactsPageState extends State<ContactsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (BuildContext context, int index) {
-        if(index < _functionButtons.length) {
-          return _functionButtons[index];
-        }
-        int _contactIndex = index - _functionButtons.length;
-        // 相同首字母的联系人排在一个首字母下
-        bool _isGroupTitle = true;
-        Contact _contact = _contacts[_contactIndex];
-        if(_contactIndex >= 1 && _contact.nameIndex == _contacts[_contactIndex - 1].nameIndex) {
-          _isGroupTitle = false;
-        }
-        else {
+    final List<Widget> _letters = INDEX_BAR_WORDS.map((String word) {
+      return Expanded(
+        child: Text(word),
+      );
+    }).toList();
+    return Stack(
+      children: <Widget>[
+        ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            if(index < _functionButtons.length) {
+              return _functionButtons[index];
+            }
+            int _contactIndex = index - _functionButtons.length;
+            // 相同首字母的联系人排在一个首字母下
+            bool _isGroupTitle = true;
+            Contact _contact = _contacts[_contactIndex];
+            if(_contactIndex >= 1 && _contact.nameIndex == _contacts[_contactIndex - 1].nameIndex) {
+              _isGroupTitle = false;
+            }
 
-        }
-        return _ContactItem(
-          avatar: _contact.avatar, 
-          title: _contact.name, 
-          groupTitle: _isGroupTitle ? _contact.nameIndex : null,
-        );
-      },
-      itemCount: _contacts.length + _functionButtons.length,
+            return _ContactItem(
+              avatar: _contact.avatar, 
+              title: _contact.name, 
+              groupTitle: _isGroupTitle ? _contact.nameIndex : null
+            );
+          },
+          itemCount: _contacts.length + _functionButtons.length,
+        ),
+        Positioned(
+          width: Constants.IndexBarWidth,
+          right: 0.0,
+          top: 0.0,
+          bottom: 0.0,
+          child: Column(
+            children: _letters,
+          ),
+        )
+      ],
     );
   }
 }
