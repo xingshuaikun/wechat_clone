@@ -180,7 +180,7 @@ class _ContactsPageState extends State<ContactsPage> {
     super.dispose();
   }
 
-  String getLetter(BuildContext context, int tileHeight, Offset globalPos) {
+  String getLetter(BuildContext context, double tileHeight, Offset globalPos) {
     RenderBox _box = context.findRenderObject();
     var local = _box.globalToLocal(globalPos);
     int index = (local.dy ~/ tileHeight).clamp(0, INDEX_BAR_WORDS.length - 1);
@@ -203,12 +203,19 @@ class _ContactsPageState extends State<ContactsPage> {
   Widget _buildIndexBar(BuildContext context, BoxConstraints constraints) {
     final List<Widget> _letters = INDEX_BAR_WORDS.map((String word) {
       return Expanded(
-        child: Text(word),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: Color(AppColors.DividerColor), width: 1.0)
+            )
+          ),
+          child: Text(word),
+        ),
       );
     }).toList();
 
     final double _totalHeight = constraints.biggest.height;
-    final int _tileHeight = _totalHeight ~/ _letters.length;
+    final double _tileHeight = _totalHeight / _letters.length;
 
     return GestureDetector(
       // 点下去触发

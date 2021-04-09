@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_wechat_clone/home/full_width_button.dart';
 
 // 颜色
 class AppColors {
+  // 发现页面背景颜色
+  static const BackgroundColor = 0xffebebeb;
   static const AppBarColor = 0xff393a3f; 
   static const TabIconActive = 0xff07c160;
   static const TabIconNormal = 0xff454545;
@@ -64,6 +67,10 @@ class AppStyles {
     fontSize: 64.0,
     color: Colors.white,
   );
+  /*// 发现页面按钮设置
+  static const FullWidthIconButtonTitleStyle = TextStyle(
+    fontSize: 
+  );*/
 }
 
 // 图标
@@ -87,4 +94,6 @@ class Constants {
   static const IndexLetterBoxSize = 114.0;
   // 通讯录首字母索引值圆角在该页显示的大小
   static const IndexLetterBoxRadius = 4.0;
+  // 发现页面按钮大小设置
+  static const FullWidthIconButtonIconSize = 24.0;
 }
