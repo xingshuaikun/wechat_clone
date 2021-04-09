@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../home/constants.dart' show AppColors,AppStyles, Constants;
+import '../home/constants.dart' show AppColors, AppStyles, Constants;
 import '../modal/contacts.dart' show Contact, ContactsPageData;
 
 class _ContactItem extends StatelessWidget {
@@ -15,6 +15,10 @@ class _ContactItem extends StatelessWidget {
   final String groupTitle;
   final VoidCallback onPressed;
 
+  static const double MARGIN_VERTICAL = 10.0;
+  // final double BUTTON_HEIGHT = 48.0;
+  static const double GROUP_TITLE_HEIGHT = 24.0;
+
   // 通讯录界面的图标来自网络还是本地
   bool get _isAvatarFromNet {
     if(this.avatar.startsWith('http') || this.avatar.startsWith('https')) {
@@ -22,6 +26,16 @@ class _ContactItem extends StatelessWidget {
     }
     else {
       return false;
+    }
+  }
+
+  static double _height(bool hasGroupTitle) {
+    final _buttonHeight = MARGIN_VERTICAL * 2 + Constants.ContactAvatarSize + Constants.DividerWidth;
+    if(hasGroupTitle) {
+      return _buttonHeight + GROUP_TITLE_HEIGHT;
+    }
+    else {
+      return _buttonHeight;
     }
   }
 
@@ -44,11 +58,11 @@ class _ContactItem extends StatelessWidget {
       );
     }
 
-    // 列表项主题部分
+    // 列表项主体部分
     Widget _button = Container(
       // margin 用来设置盒子外边框
       margin: const EdgeInsets.symmetric(horizontal: 16.0,),
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.symmetric(vertical: MARGIN_VERTICAL),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -72,7 +86,8 @@ class _ContactItem extends StatelessWidget {
       _itemBody = Column(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 4.0, bottom: 4.0),
+            height: GROUP_TITLE_HEIGHT,
+            padding: EdgeInsets.only(left: 16.0, right: 16.0),
             color: const Color(AppColors.ContactGroupTitleBg),
             alignment: Alignment.centerLeft,
             child: Text(this.groupTitle, style: AppStyles.GroupTitleItemTextStyle),
@@ -89,21 +104,24 @@ class _ContactItem extends StatelessWidget {
   }
 }
 
-const INDEX_BAR_WORDS = {
+const INDEX_BAR_WORDS = [
   "↑", "☆", 
   "A", "B", "C", "D", "E", "F", "G", 
   "H", "I", "J", "K", "L", "M", "N", 
   "O", "P", "Q", "R", "S", "T", 
   "U", "V", "W", "X", "Y", "Z", 
   "#"
-};
+];
 
 class ContactsPage extends StatefulWidget {
   @override
+  Color _indexBarBg = Colors.transparent;
   _ContactsPageState createState() => _ContactsPageState();
 }
 
 class _ContactsPageState extends State<ContactsPage> {
+  // 用于控制列表滚动
+  ScrollController _scrollController;
   final ContactsPageData data = ContactsPageData.mock();
   final List<Contact> _contacts = [];
   final List<_ContactItem> _functionButtons = [
@@ -128,6 +146,7 @@ class _ContactsPageState extends State<ContactsPage> {
       onPressed: () { print('点击公众号。');},
     ),
   ];
+  final Map _letterPosMap = {INDEX_BAR_WORDS[0]: 0.0};
 
   @override
   void initState() {
@@ -137,6 +156,26 @@ class _ContactsPageState extends State<ContactsPage> {
     _contacts..addAll(data.contacts)..addAll(data.contacts)..addAll(data.contacts);
     // 将联系人列表的好友按字母序升序排序
     _contacts.sort((Contact a, Contact b) => a.nameIndex.compareTo(b.nameIndex));
+    _scrollController = new ScrollController();
+    // 计算用于 IndexBar 进行定位的关键通讯录列表项的位置
+    var _totalPos = _functionButtons.length * _ContactItem._height(false);
+    for(int i = 0; i < _contacts.length; i++) {
+      bool _hasGroupTitle = true;
+      if(i > 0 &&_contacts[i].nameIndex.compareTo(_contacts[i - 1].nameIndex) == 0) {
+        _hasGroupTitle = false;
+      }
+      if(_hasGroupTitle) {
+        _letterPosMap[_contacts[i].nameIndex] = _totalPos;
+      }
+      _totalPos += _ContactItem._height(_hasGroupTitle);
+    }
+  }
+
+  @override
+  void dispose() {
+    // 销毁通讯录首字母索引控制滚动列表
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -146,9 +185,11 @@ class _ContactsPageState extends State<ContactsPage> {
         child: Text(word),
       );
     }).toList();
+
     return Stack(
       children: <Widget>[
         ListView.builder(
+          controller: _scrollController,
           itemBuilder: (BuildContext context, int index) {
             if(index < _functionButtons.length) {
               return _functionButtons[index];
@@ -174,8 +215,37 @@ class _ContactsPageState extends State<ContactsPage> {
           right: 0.0,
           top: 0.0,
           bottom: 0.0,
-          child: Column(
-            children: _letters,
+          child: Container(
+            color: widget._indexBarBg,
+            // 手势检测
+            child: GestureDetector(
+              // 点下去触发
+              onVerticalDragDown: (DragDownDetails details) {
+                setState(() {
+                  widget._indexBarBg = Colors.black26;
+                });
+                _scrollController.animateTo(
+                  _letterPosMap['Y'], 
+                  duration: Duration(milliseconds: 200),
+                  curve: Curves.easeIn, 
+                );
+              },
+              // 点下去滑动松开触发
+              onVerticalDragEnd: (DragEndDetails details) {
+                setState(() {
+                  widget._indexBarBg = Colors.transparent;
+                });
+              },
+              // 点下去松开触发
+              onVerticalDragCancel: () {
+                setState(() {
+                  widget._indexBarBg = Colors.transparent;
+                });
+              },
+              child: Column(
+                children: _letters,
+              ),
+            ),
           ),
         )
       ],
