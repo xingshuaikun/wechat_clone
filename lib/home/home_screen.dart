@@ -3,6 +3,7 @@ import './constants.dart' show Constants, AppColors;
 import './conversation_page.dart';
 import 'contacts_page.dart';
 import 'discover_page.dart';
+import 'functions_page.dart';
 
 enum ActionItems {
   GROUP_CHAT, ADD_FRIEND, QR_SCAN, PAYMENT, HELP
@@ -92,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ConversationPage(),
       ContactsPage(),
       DiscoverPage(),
-      Container(color: Colors.brown),
+      FunctionsPage(),
     ];
   }
 
@@ -141,7 +142,11 @@ _build_PopupMunuItem(int iconName, String title) {
             onPressed: () { print("点击了搜索按钮"); },
           ),
           Container(width: 16.0),
-          PopupMenuButton(
+          Theme(
+            data: ThemeData(
+              cardColor: Color(AppColors.AppBarColor),
+            ),
+            child: PopupMenuButton(
             itemBuilder: (BuildContext context) {
               return <PopupMenuItem<ActionItems>>[
                 PopupMenuItem(
@@ -169,8 +174,9 @@ _build_PopupMunuItem(int iconName, String title) {
             icon: Icon(IconData(
               0xe657,
               fontFamily: Constants.IconFontFamily,
-            ), size: 22.0),
+            ), size: 22.0, color: AppColors.ActionIconColor),
             onSelected: (ActionItems selected) { print("点击的是$selected"); },
+          ),
           ),
           Container(width: 16.0),
         ],

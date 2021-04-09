@@ -3,11 +3,44 @@ import '../home/constants.dart' show AppColors, AppStyles, Constants;
 import '../modal/conversation.dart' show Conversation, Device, ConversationPageData;
 
 class _ConversationItem extends StatelessWidget {
-  const _ConversationItem({Key key, this.conversation})
+  _ConversationItem({Key key, this.conversation})
     : assert(conversation != null),
     super(key: key);
 
   final Conversation conversation;
+  var tapPos;
+
+  _showMenu(BuildContext context, Offset tapPos) {
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject();
+    final RelativeRect position = RelativeRect.fromLTRB(
+      tapPos.dx, tapPos.dy,
+      overlay.size.width - tapPos.dx,
+      overlay.size.height - tapPos.dy
+    );
+    showMenu(
+      context: context, 
+      position: position, 
+      items: <PopupMenuItem<String>>[
+        PopupMenuItem(
+          child: Text(Constants.MENU_MARK_AS_UNREAD_VALUE),
+          value: Constants.MENU_MARK_AS_UNREAD,
+        ),
+        PopupMenuItem(
+          child: Text(Constants.MENU_PIN_TO_TOP_VALUE),
+          value: Constants.MENU_PIN_TO_TOP,
+        ),
+        PopupMenuItem(
+          child: Text(Constants.MENU_DELETE_CONVERSATION_VALUE),
+          value: Constants.MENU_DELETE_CONVERSATION,
+        ),
+      ]
+    ).then<String>((String selected) {
+      switch (selected) {
+        default:
+          print('点击的菜单是：$selected');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,38 +117,51 @@ class _ConversationItem extends StatelessWidget {
       );
     }
 
-    return Container(
-      padding: const EdgeInsets.all(10.0),
-      // 分割线
-      decoration: BoxDecoration(
-        color: Color(AppColors.ConversationItemBg),
-        border: Border(
-          bottom: BorderSide(
-            color: Color(AppColors.DividerColor), 
-            width: Constants.DividerWidth
+    return Material(
+      color: Color(AppColors.ConversationItemBg),
+      child: InkWell(
+        onTap: () {
+          print('打开会话：${conversation.title}');
+        },
+        onTapDown: (TapDownDetails details) {
+          tapPos = details.globalPosition;
+        },
+        onLongPress: () {
+          _showMenu(context, tapPos);
+        },
+        child: Container(
+          padding: const EdgeInsets.all(10.0),
+          //  分割线
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Color(AppColors.DividerColor), 
+                width: Constants.DividerWidth
+              ),
+            )
           ),
-        )
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          avatarContainer,
-          Container(width: 10.0),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget> [
-                Text(conversation.title, style: AppStyles.TitleStyle),
-                Text(conversation.des, style: AppStyles.DesStyle),
-              ],
-            ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              avatarContainer,
+              Container(width: 10.0),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget> [
+                    Text(conversation.title, style: AppStyles.TitleStyle),
+                    Text(conversation.des, style: AppStyles.DesStyle),
+                  ],
+                ),
+              ),
+              Container(width: 10.0),
+              Column(
+                children: _rightArea,
+              ),
+            ],
           ),
-          Container(width: 10.0),
-          Column(
-            children: _rightArea,
-          ),
-        ],
-      ),
+        ),
+      )
     );
   }
 }

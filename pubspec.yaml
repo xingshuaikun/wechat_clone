@@ -61,6 +61,7 @@ flutter:
     - assets/images/ic_new_friend.png
     - assets/images/ic_people_nearby.png
     - assets/images/ic_public_account.png
+    - assets/images/ic_qrcode_preview_tiny.png
     - assets/images/ic_qrcode_previous_tiny.png
     - assets/images/ic_quick_scan.png
     - assets/images/ic_quick_search.png
