@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// 颜色
 class AppColors {
   static const AppBarColor = 0xff393a3f; 
   static const TabIconActive = 0xff07c160;
@@ -30,8 +31,11 @@ class AppColors {
   static const ContactGroupTitleBg = 0xffebebeb;
   // 通讯录不同首字母联系人的字体颜色
   static const ContactGroupTitleText = 0xff888888;
+  // 通讯录首字母索引值在该页显示的颜色
+  static const IndexLetterBoxBg = Colors.black45;
 }
 
+// 字体
 class AppStyles {
   static const TitleStyle = TextStyle(
     fontSize: 14.0,
@@ -55,8 +59,14 @@ class AppStyles {
     fontSize: 14.0,
     color: Color(AppColors.ContactGroupTitleText),
   );
+  // 通讯录首字母索引值在该页显示的字体
+  static const IndexLetterBoxTextStyle = TextStyle(
+    fontSize: 64.0,
+    color: Colors.white,
+  );
 }
 
+// 图标
 class Constants {
   static const IconFontFamily = 'appIconFont';
   // 头像大小
@@ -73,4 +83,8 @@ class Constants {
   static const ContactAvatarSize = 36.0;
   // 通讯录首字母的索引值宽度
   static const IndexBarWidth = 24.0;
+  // 通讯录首字母索引值在该页显示的大小
+  static const IndexLetterBoxSize = 114.0;
+  // 通讯录首字母索引值圆角在该页显示的大小
+  static const IndexLetterBoxRadius = 4.0;
 }

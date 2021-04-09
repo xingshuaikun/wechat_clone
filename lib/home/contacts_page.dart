@@ -116,6 +116,8 @@ const INDEX_BAR_WORDS = [
 class ContactsPage extends StatefulWidget {
   @override
   Color _indexBarBg = Colors.transparent;
+  String _currentLetter = '';
+
   _ContactsPageState createState() => _ContactsPageState();
 }
 
@@ -178,77 +180,131 @@ class _ContactsPageState extends State<ContactsPage> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  String getLetter(BuildContext context, int tileHeight, Offset globalPos) {
+    RenderBox _box = context.findRenderObject();
+    var local = _box.globalToLocal(globalPos);
+    int index = (local.dy ~/ tileHeight).clamp(0, INDEX_BAR_WORDS.length - 1);
+    return INDEX_BAR_WORDS[index];
+  }
+
+  void _jumpToIndex(String letter) {
+    if(_letterPosMap.isNotEmpty) {
+      final _pos = _letterPosMap[letter];
+      if(_pos != null) {
+        _scrollController.animateTo(
+            _pos, 
+            curve: Curves.easeOut, 
+            duration: Duration(milliseconds: 200),
+        );
+      }
+    }
+  }
+
+  Widget _buildIndexBar(BuildContext context, BoxConstraints constraints) {
     final List<Widget> _letters = INDEX_BAR_WORDS.map((String word) {
       return Expanded(
         child: Text(word),
       );
     }).toList();
 
-    return Stack(
-      children: <Widget>[
-        ListView.builder(
-          controller: _scrollController,
-          itemBuilder: (BuildContext context, int index) {
-            if(index < _functionButtons.length) {
-              return _functionButtons[index];
-            }
-            int _contactIndex = index - _functionButtons.length;
-            // 相同首字母的联系人排在一个首字母下
-            bool _isGroupTitle = true;
-            Contact _contact = _contacts[_contactIndex];
-            if(_contactIndex >= 1 && _contact.nameIndex == _contacts[_contactIndex - 1].nameIndex) {
-              _isGroupTitle = false;
-            }
+    final double _totalHeight = constraints.biggest.height;
+    final int _tileHeight = _totalHeight ~/ _letters.length;
 
-            return _ContactItem(
-              avatar: _contact.avatar, 
-              title: _contact.name, 
-              groupTitle: _isGroupTitle ? _contact.nameIndex : null
-            );
-          },
-          itemCount: _contacts.length + _functionButtons.length,
+    return GestureDetector(
+      // 点下去触发
+      onVerticalDragDown: (DragDownDetails details) {
+        setState(() {
+          widget._indexBarBg = Colors.black26;
+          widget._currentLetter = getLetter(context, _tileHeight, details.globalPosition);
+          _jumpToIndex(widget._currentLetter);
+        });
+      },
+      // 点下去滑动松开触发
+      onVerticalDragEnd: (DragEndDetails details) {
+        setState(() {
+          widget._indexBarBg = Colors.transparent;
+          widget._currentLetter = null;
+        });
+      },
+      // 点下去松开触发
+      onVerticalDragCancel: () {
+        setState(() {
+          widget._indexBarBg = Colors.transparent;
+          widget._currentLetter = null;
+        });
+      },
+      // 拖到图标触发
+      onVerticalDragUpdate: (DragUpdateDetails details) {
+        setState(() {
+          widget._indexBarBg = Colors.black26;
+          widget._currentLetter = getLetter(context, _tileHeight, details.globalPosition);
+          _jumpToIndex(widget._currentLetter);
+        });
+      },
+      child: Column(
+        children: _letters,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Widget> _body = [
+      ListView.builder(
+        controller: _scrollController,
+        itemBuilder: (BuildContext context, int index) {
+          if(index < _functionButtons.length) {
+            return _functionButtons[index];
+          }
+          int _contactIndex = index - _functionButtons.length;
+          // 相同首字母的联系人排在一个首字母下
+          bool _isGroupTitle = true;
+          Contact _contact = _contacts[_contactIndex];
+          if(_contactIndex >= 1 && _contact.nameIndex == _contacts[_contactIndex - 1].nameIndex) {
+            _isGroupTitle = false;
+          }
+
+          return _ContactItem(
+            avatar: _contact.avatar, 
+            title: _contact.name, 
+            groupTitle: _isGroupTitle ? _contact.nameIndex : null
+          );
+        },
+        itemCount: _contacts.length + _functionButtons.length,
+      ),
+      Positioned(
+        width: Constants.IndexBarWidth,
+        right: 0.0,
+        top: 0.0,
+        bottom: 0.0,
+        child: Container(
+          color: widget._indexBarBg,
+          // 手势检测
+          child: LayoutBuilder(
+            builder: _buildIndexBar,
+          ),
         ),
-        Positioned(
-          width: Constants.IndexBarWidth,
-          right: 0.0,
-          top: 0.0,
-          bottom: 0.0,
+      ),
+    ];
+    if(widget._currentLetter != null && widget._currentLetter.isNotEmpty) {
+      _body.add(
+        Center(
           child: Container(
-            color: widget._indexBarBg,
-            // 手势检测
-            child: GestureDetector(
-              // 点下去触发
-              onVerticalDragDown: (DragDownDetails details) {
-                setState(() {
-                  widget._indexBarBg = Colors.black26;
-                });
-                _scrollController.animateTo(
-                  _letterPosMap['Y'], 
-                  duration: Duration(milliseconds: 200),
-                  curve: Curves.easeIn, 
-                );
-              },
-              // 点下去滑动松开触发
-              onVerticalDragEnd: (DragEndDetails details) {
-                setState(() {
-                  widget._indexBarBg = Colors.transparent;
-                });
-              },
-              // 点下去松开触发
-              onVerticalDragCancel: () {
-                setState(() {
-                  widget._indexBarBg = Colors.transparent;
-                });
-              },
-              child: Column(
-                children: _letters,
-              ),
+            width: Constants.IndexLetterBoxSize,
+            height: Constants.IndexLetterBoxSize,
+            decoration: BoxDecoration(
+              color: AppColors.IndexLetterBoxBg,
+              borderRadius: BorderRadius.all(Radius.circular(Constants.IndexLetterBoxRadius)),
+            ),
+            child: Center(
+              child: Text(widget._currentLetter, style: AppStyles.IndexLetterBoxTextStyle),
             ),
           ),
-        )
-      ],
+        ),
+      );
+    }
+    return Stack(
+      children: _body,
     );
   }
 }
