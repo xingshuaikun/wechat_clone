@@ -9,6 +9,7 @@ class ConversationDetailPage extends StatefulWidget {
 }
 
 class _ConversationDetailPageState extends State<ConversationDetailPage> {
+  // 与具体联系人聊天输入框已经输入的文字的最大显示行数
   final maxChatBoxLinesForDisplay = 4;
   final _controller = TextEditingController();
 
@@ -109,11 +110,14 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
 
                         TextPainter _tp = TextPainter(
                           text: _text,
+                          // 与具体联系人聊天输入框的已经输入的文字的绘制方向：从左向右
                           textDirection: TextDirection.ltr,
+                          // 左对齐
                           textAlign: TextAlign.left
                         );
                         _tp.layout(maxWidth: size.maxWidth);
 
+                        // ceil() 返回一个大于等于当前的数最小整数
                         final _lines = (_tp.size.height / _tp.preferredLineHeight).ceil();
 
                         return TextField(

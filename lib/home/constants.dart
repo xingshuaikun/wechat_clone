@@ -8,6 +8,7 @@ class AppColors {
   static const NewTagBg = 0xfffa5251;
   // 与具体联系人的聊天输入框背景颜色
   static const ChatBoxBg = 0xfff7f7f7;
+  // 与具体联系人的聊天输入框的光标颜色
   static const ChatBoxCursorColor = 0xff07c160;
   static const ButtonArrowColor = 0xffadadad;
   
@@ -68,6 +69,7 @@ class AppStyles {
     color: Colors.white,
     fontWeight: FontWeight.bold
   );
+  // 与具体联系人聊天输入框中已经输入的文字的字体格式
   static const ChatBoxTextStyle = TextStyle(
     fontSize: Constants.ContentTextSize,
     color: const Color(AppColors.TitleColor)
@@ -135,6 +137,7 @@ class Constants {
   static const ActionIconSizeLarge = 32.0;
   static const AvatarRadius = 4.0;
   static const TitleTextSize = 16.0;
+  // 与具体联系人聊天输入框中已经输入的文字的大小
   static const ContentTextSize = 20.0;
   static const DesTextSize = 13.0;
   // 与具体联系人聊天输入框的高度
