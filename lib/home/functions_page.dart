@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import '../modal/me.dart' show me;
 import 'constants.dart' show AppColors, AppStyles;
 import '../home/full_width_button.dart';
+import '../i18n//strings.dart' show Strings;
 
 class _Header extends StatelessWidget {
-  static const AVATAR_SIZE = 72.0;
+  static const AVATAR_SIZE = 64.0;
+  static const RADIUS = 6.0;
   static const SEPARATOR_SIZE = 16.0;
   static const QR_CODE_PREV_SIZE = 20.0;
 
@@ -14,47 +16,54 @@ class _Header extends StatelessWidget {
       onPressed: () {},
       color: AppColors.HeaderCardBg,
       padding: const EdgeInsets.only(
-        left: SEPARATOR_SIZE,
-        right: SEPARATOR_SIZE,
-        top: 10.0,
-        bottom: 10.0
+        left: 32.0,
+        right: FullWidthButton.HORIZONTAL_PADDING,
+        top: 0.0,
+        bottom: 42.0
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Image.network(
-            me.avatar,
-            width: AVATAR_SIZE,
-            height: AVATAR_SIZE,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(RADIUS),
+            child: Image.network(
+              me.avatar,
+              width: AVATAR_SIZE,
+              height: AVATAR_SIZE,
+            ),
           ),
           Expanded(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 // 我的页面昵称
                 Container(
-                  alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.only(
                     left: SEPARATOR_SIZE,
                     bottom: 5.0,
                   ),
                   child: Text(me.name, style: AppStyles.HeaderCardTitleTextStyle),
                 ),
-                // 我的页面微信号
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.only(
-                    left: SEPARATOR_SIZE
-                  ),
-                  child: Text(me.account, style: AppStyles.HeaderCardDesTextStyle),
-                ),
+                Row(
+                  children: <Widget>[
+                    // 我的页面微信号
+                    Expanded(
+                        child: Container(
+                      padding: const EdgeInsets.only(left: SEPARATOR_SIZE),
+                      child: Text('${Strings.WechatAccountIs}${me.account}',
+                          style: AppStyles.HeaderCardDesTextStyle),
+                    )),
+                    // 我的页面二维码
+                    Image.asset(
+                      'assets/images/ic_qrcode_preview_tiny.png',
+                      width: QR_CODE_PREV_SIZE,
+                      height: QR_CODE_PREV_SIZE,
+                    ),
+                    FullWidthButton.arrowRight(),
+                  ],
+                )
               ],
             ),
-          ),
-          // 我的页面二维码
-          Image.asset(
-            'assets/images/ic_qrcode_previous_tiny.png',
-            width: QR_CODE_PREV_SIZE,
-            height: QR_CODE_PREV_SIZE,
           ),
         ],
       ),
@@ -69,7 +78,7 @@ class FunctionsPage extends StatefulWidget {
 
 class _FunctionsPageState extends State<FunctionsPage> {
   // 我的页面头像、昵称、微信号、二维码与AppBar的间距
-  static const SEPARATOR_SIZE = 20.0;
+  static const SEPARATOR_SIZE = 10.0;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +87,6 @@ class _FunctionsPageState extends State<FunctionsPage> {
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            SizedBox(height: SEPARATOR_SIZE),
             _Header(),
             SizedBox(height: SEPARATOR_SIZE),
             FullWidthButton(

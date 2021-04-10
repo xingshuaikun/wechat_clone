@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import '../home/constants.dart' show AppColors, AppStyles, Constants;
+import '../home/constants.dart' show AppColors, AppStyles, Constants, Routes;
 import '../modal/conversation.dart' show Conversation, Device, ConversationPageData;
+import '../conversation/conversation_detail_args.dart';
 
 class _ConversationItem extends StatelessWidget {
+  static const VERTICAL_PADDING = 12.0;
+  static const HORIZONTAL_PADDING = 18.0;
+  static const UN_READ_MSG_CIRCLE_SIZE = 20.0;
+  static const UN_READ_MSG_DOT_SIZE = 12.0;
+
   _ConversationItem({Key key, this.conversation})
     : assert(conversation != null),
     super(key: key);
@@ -51,6 +57,7 @@ class _ConversationItem extends StatelessWidget {
         conversation.avatar,
         width: Constants.ConversationAvatarSize,
         height: Constants.ConversationAvatarSize,
+        fit: BoxFit.fill,
       );
     }
     else {
@@ -58,63 +65,78 @@ class _ConversationItem extends StatelessWidget {
         conversation.avatar,
         width: Constants.ConversationAvatarSize,
         height: Constants.ConversationAvatarSize,
+        fit: BoxFit.fill,
       );
     }
+
+    avatar = ClipRRect(
+      borderRadius: BorderRadius.circular(Constants.AvatarRadius),
+      child: avatar,
+    );
 
     Widget avatarContainer;
     if(conversation.unreadMsgCount > 0) {
       // 未读消息角标
-      Widget unreadMsgCountText = Container(
-        width: Constants.UnReadMsgNotifyDotSize,
-        height: Constants.UnReadMsgNotifyDotSize,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(Constants.UnReadMsgNotifyDotSize / 2.0),
-          color: Color(AppColors.NotifyDotBg),
-        ),
-        child: Text(conversation.unreadMsgCount.toString(), style: AppStyles.UnreadMsgCountDotStyle),
-      );
+      Widget unreadMsgCountText;
+      if (conversation.displayDot) {
+        unreadMsgCountText = Container(
+          width: UN_READ_MSG_DOT_SIZE,
+          height: UN_READ_MSG_DOT_SIZE,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(UN_READ_MSG_DOT_SIZE / 2.0),
+            color: Color(AppColors.NotifyDotBg),
+          ),
+        );
+      } else {
+        unreadMsgCountText = Container(
+          width: UN_READ_MSG_CIRCLE_SIZE,
+          height: UN_READ_MSG_CIRCLE_SIZE,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(UN_READ_MSG_CIRCLE_SIZE / 2.0),
+            color: Color(AppColors.NotifyDotBg),
+          ),
+          child: Text(conversation.unreadMsgCount.toString(),
+              style: AppStyles.UnreadMsgCountDotStyle),
+        );
+      }
 
       avatarContainer = Stack(
         overflow: Overflow.visible,
         children: <Widget>[
           avatar,
           Positioned(
-            right: -6.0,
-            top: -6.0,
-            child: unreadMsgCountText
-          ),
+            right: conversation.displayDot ? -4.0 : -6.0,
+            top: conversation.displayDot ? -4.0 : -6.0,
+            child: unreadMsgCountText,
+          )
         ],
       );
-    }
-    else {
+    } else {
       avatarContainer = avatar;
     }
 
     // 勿扰模式图标
-    var _rightArea = <Widget> [
+    var _rightArea = <Widget>[
       Text(conversation.updateAt, style: AppStyles.DesStyle),
       SizedBox(height: 10.0),
     ];
-    if(conversation.isMute) {
-      _rightArea.add(
-        Icon(IconData(
-          0xe610,
-          fontFamily: Constants.IconFontFamily), 
-          color: Color(AppColors.ConversationMuteIcon), 
-          size: Constants.ConversationMuteIconSize
-        )
-      );
-    }
-    else {
-      _rightArea.add(
-        Icon(IconData(
-          0xe610,
-          fontFamily: Constants.IconFontFamily), 
+    if (conversation.isMute) {
+      _rightArea.add(Icon(
+          IconData(
+            0xe755,
+            fontFamily: Constants.IconFontFamily,
+          ),
+          color: Color(AppColors.ConversationMuteIcon),
+          size: Constants.ConversationMuteIconSize));
+    } else {
+      _rightArea.add(Icon(
+          IconData(
+            0xe755,
+            fontFamily: Constants.IconFontFamily,
+          ),
           color: Colors.transparent,
-          size: Constants.ConversationMuteIconSize
-        )
-      );
+          size: Constants.ConversationMuteIconSize));
     }
 
     return Material(
@@ -122,6 +144,8 @@ class _ConversationItem extends StatelessWidget {
       child: InkWell(
         onTap: () {
           print('打开会话：${conversation.title}');
+          Navigator.pushNamed(context, Routes.Conversation,
+              arguments: ConversationDetailArgs(title: conversation.title));
         },
         onTapDown: (TapDownDetails details) {
           tapPos = details.globalPosition;
@@ -130,38 +154,48 @@ class _ConversationItem extends StatelessWidget {
           _showMenu(context, tapPos);
         },
         child: Container(
-          padding: const EdgeInsets.all(10.0),
-          //  分割线
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Color(AppColors.DividerColor), 
-                width: Constants.DividerWidth
-              ),
-            )
-          ),
+          padding: const EdgeInsets.only(left: HORIZONTAL_PADDING),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               avatarContainer,
-              Container(width: 10.0),
+              Container(width: 12.0),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget> [
-                    Text(conversation.title, style: AppStyles.TitleStyle),
-                    Text(conversation.des, style: AppStyles.DesStyle),
+                  child: Container(
+                padding: const EdgeInsets.only(
+                    right: HORIZONTAL_PADDING,
+                    top: VERTICAL_PADDING,
+                    bottom: VERTICAL_PADDING),
+                decoration: BoxDecoration(
+                    border: Border(
+                  bottom: BorderSide(
+                      width: Constants.DividerWidth,
+                      color: Color(AppColors.DividerColor)),
+                )),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(conversation.title, style: AppStyles.TitleStyle),
+                          SizedBox(height: 2.0),
+                          Text(conversation.des,
+                              style: AppStyles.DesStyle, maxLines: 1)
+                        ],
+                      ),
+                    ),
+                    Container(width: 10.0),
+                    Column(
+                      children: _rightArea,
+                    ),
                   ],
                 ),
-              ),
-              Container(width: 10.0),
-              Column(
-                children: _rightArea,
-              ),
+              )),
             ],
           ),
         ),
-      )
+      ),
     );
   }
 }
@@ -187,9 +221,13 @@ class _DeviceInfoItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 24.0, top: 10.0, right: 24.0, bottom: 10.0),
+      padding: EdgeInsets.only(left: 24.0, top: 14.0, right: 24.0, bottom: 14.0),
       decoration: BoxDecoration(
         border: Border(
+          top: BorderSide(
+            width: Constants.DividerWidth,
+            color: Color(AppColors.DividerColor)
+          ),
           bottom: BorderSide(
             width: Constants.DividerWidth, 
             color: Color(AppColors.DividerColor)
@@ -201,11 +239,12 @@ class _DeviceInfoItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget> [
+          SizedBox(width: 8.0),
           Icon(IconData(
             this.IconName,
             fontFamily: Constants.IconFontFamily
           ), size: 24.0, color: Color(AppColors.DeviceInfoItemIcon)),
-          SizedBox(width: 16.0),
+          SizedBox(width: 24.0),
           Text('$deviceName 微信已登陆，手机通知已关闭。', style: AppStyles.DeviceInfoItemTextStyle),
         ],
       ),
@@ -223,21 +262,26 @@ class _ConversationPageState extends State<ConversationPage> {
   @override
   Widget build(BuildContext context) {
     var mockConversations = data.conversations;
-    return ListView.builder(
-      itemBuilder: (BuildContext context, int index) {
-        if(data.device != null) {
-          // 需要显示其他设备的信息
-          if(index == 0) {
-            return _DeviceInfoItem(device: data.device);
+    return Container(
+      color: const Color(AppColors.BackgroundColor),
+      child: ListView.builder(
+        itemBuilder: (BuildContext context, int index) {
+          if (data.device != null) {
+            // 需要显示其他设备的登录信息
+            if (index == 0) {
+              return _DeviceInfoItem(device: data.device);
+            }
+            return _ConversationItem(
+                conversation: mockConversations[index - 1]);
+          } else {
+            // 不需要显示其他设备的登录信息
+            return _ConversationItem(conversation: mockConversations[index]);
           }
-          return _ConversationItem(conversation: mockConversations[index - 1]);
-        }
-        // 不需要显示其他设备的信息
-        else {
-          return _ConversationItem(conversation: mockConversations[index]);
-        }
-      },
-      itemCount: data.device != null ? mockConversations.length + 1 : mockConversations.length,
+        },
+        itemCount: data.device != null
+            ? mockConversations.length + 1
+            : mockConversations.length,
+      ),
     );
   }
 }

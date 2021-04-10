@@ -9,7 +9,7 @@ enum Device {
 
 class Conversation {
   const Conversation({
-    // @required表示不能省略
+    // @required 表示此处的参数不能省略
     @required this.avatar,
     @required this.title,
     this.titleColor: AppColors.TitleTextColor,

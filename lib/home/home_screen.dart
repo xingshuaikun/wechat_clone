@@ -1,50 +1,125 @@
 import 'package:flutter/material.dart';
-import './constants.dart' show Constants, AppColors;
+import 'package:flutter/services.dart';
+import './constants.dart' show Constants, AppColors, AppStyles;
 import './conversation_page.dart';
 import 'contacts_page.dart';
 import 'discover_page.dart';
 import 'functions_page.dart';
+import '../i18n/strings.dart' show Strings;
+import './conversation_page.dart';
 
 enum ActionItems {
   GROUP_CHAT, ADD_FRIEND, QR_SCAN, PAYMENT, HELP
 }
 
 class NavigationIconView {
-  final String _title;
-  /*final IconData _icon;
-  final IconData _activeIcon;*/
   final BottomNavigationBarItem item;
 
   NavigationIconView({Key key, String title, IconData icon, IconData activeIcon}) :
-    _title = title,
-    /*_icon = icon,
-    _activeIcon = activeIcon,*/
     item = BottomNavigationBarItem(
-      icon: Icon(icon/*, color: Color(AppColors.TabIconNormal)*/),
-      activeIcon: Icon(activeIcon/*, color: Color(AppColors.TabIconActive)*/),
-      title: Text(title/*, style: TextStyle(
-        fontSize: 14.0,
-        color: Color(AppColors.TabIconNormal)
-      )*/),
+      icon: Icon(icon),
+      activeIcon: Icon(activeIcon),
+      title: Text(title),
       backgroundColor: Colors.white,
     );
 }
 
 class HomeScreen extends StatefulWidget {
+
+  String title = Strings.TitleWechat;
+  Color headerColor;
+
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  static const HeaderColor = const Color(AppColors.PrimaryColor);
   PageController _pageController;
   int _currentIndex  = 0;
   List<NavigationIconView> _navigationViews;
   List<Widget> _pages;
+  List<Widget> _mainActions;
+  List<Widget> _functionActions;
 
   void initState() {
     super.initState();
+    widget.headerColor = HeaderColor;
+
+    // 初始化前3个界面的操作按钮
+    _mainActions = [
+      IconButton(
+        icon: Icon(
+            IconData(
+              0xe7d2,
+              fontFamily: Constants.IconFontFamily,
+            ),
+            size: Constants.ActionIconSize,
+            color: AppColors.ActionIconColor),
+        onPressed: () {
+          print('点击了搜索按钮');
+        },
+      ),
+      Container(width: 16.0),
+      Theme(
+        data: ThemeData(cardColor: Color(AppColors.ActionMenuBgColor)),
+        child: PopupMenuButton(
+          itemBuilder: (BuildContext context) {
+            return <PopupMenuItem<ActionItems>>[
+              PopupMenuItem(
+                child: _buildPopupMunuItem(0xe63f, Strings.MenuGroupChat),
+                value: ActionItems.GROUP_CHAT,
+              ),
+              PopupMenuItem(
+                child: _buildPopupMunuItem(0xe618, Strings.MenuAddFriends),
+                value: ActionItems.ADD_FRIEND,
+              ),
+              PopupMenuItem(
+                child: _buildPopupMunuItem(0xe650, Strings.MenuQRScan),
+                value: ActionItems.QR_SCAN,
+              ),
+              PopupMenuItem(
+                child: _buildPopupMunuItem(0xe685, Strings.MenuPayments),
+                value: ActionItems.PAYMENT,
+              ),
+              PopupMenuItem(
+                child: _buildPopupMunuItem(0xe60c, Strings.MenuHelp),
+                value: ActionItems.HELP,
+              ),
+            ];
+          },
+          icon: Icon(
+              IconData(
+                0xe657,
+                fontFamily: Constants.IconFontFamily,
+              ),
+              size: Constants.ActionIconSize + 4.0,
+              color: AppColors.ActionIconColor),
+          onSelected: (ActionItems selected) {
+            print('点击的是$selected');
+          },
+        ),
+      ),
+      Container(width: 16.0),
+    ];
+    _functionActions = [
+      IconButton(
+        icon: Icon(
+            IconData(
+              0xe60a,
+              fontFamily: Constants.IconFontFamily,
+            ),
+            size: Constants.ActionIconSize + 4.0,
+            color: AppColors.ActionIconColor),
+        onPressed: () {
+          print('打开相机拍短视频');
+        },
+      ),
+      Container(width: 16.0),
+    ];
+
     _navigationViews = [
       NavigationIconView(
-        title: '微信',
+        title: Strings.TitleWechat,
         icon: IconData(
           0xe600,
           fontFamily: Constants.IconFontFamily,
@@ -55,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       NavigationIconView(
-        title: '通讯录',
+        title: Strings.TitleContact,
         icon: IconData(
           0xe6af,
           fontFamily: Constants.IconFontFamily,
@@ -66,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       NavigationIconView(
-        title: '发现',
+        title: Strings.TitleDiscovery,
         icon: IconData(
           0xe629,
           fontFamily: Constants.IconFontFamily,
@@ -77,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       NavigationIconView(
-        title: '我',
+        title: Strings.TitleMe,
         icon: IconData(
           0xe67b,
           fontFamily: Constants.IconFontFamily,
@@ -90,28 +165,41 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
     _pageController = PageController(initialPage: _currentIndex);
     _pages = [
+      // 微信聊天界面
       ConversationPage(),
+      // 通讯录界面
       ContactsPage(),
+      // 发现界面
       DiscoverPage(),
+      // 我的界面
       FunctionsPage(),
     ];
   }
 
-_build_PopupMunuItem(int iconName, String title) {
+_buildPopupMunuItem(int iconName, String title) {
   return Row(
     children: <Widget>[
-      Icon(IconData(
-        iconName,
-        fontFamily: Constants.IconFontFamily,
-      ), size: 22.0, color: const Color(AppColors.AppBarPopupMenuColor)),
+      Icon(
+          IconData(
+            iconName,
+            fontFamily: Constants.IconFontFamily,
+          ),
+          size: 22.0,
+          color: const Color(AppColors.AppBarPopupMenuColor)),
       Container(width: 12.0),
-      Text(title, style: TextStyle(color: const Color(AppColors.AppBarPopupMenuColor))),
+      Text(title,
+          style:
+              TextStyle(color: const Color(AppColors.AppBarPopupMenuColor))),
     ],
   );
 }
 
   @override
   Widget build(BuildContext context) {
+    // 此处新增以下3行
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+      statusBarColor: Colors.transparent,
+    ));
     final BottomNavigationBar botNavBar = BottomNavigationBar(
       fixedColor: const Color(AppColors.TabIconActive),
       items: _navigationViews.map((NavigationIconView view) {
@@ -122,64 +210,20 @@ _build_PopupMunuItem(int iconName, String title) {
       onTap: (int index) {
         setState(() {
           _currentIndex = index;
-
-          _pageController.animateToPage(_currentIndex, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
+          _pageController.jumpToPage(_currentIndex);
         });
       }
     );
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('微信'),
+        title: Text(widget.title, style: AppStyles.TitleStyle),
+        
         // 去除appBar下面的阴影
         elevation: 0.0,
-        actions: [
-          IconButton(
-            icon: Icon(IconData(
-              0xe7d2,
-              fontFamily: Constants.IconFontFamily,
-            ), size: 22.0),
-            onPressed: () { print("点击了搜索按钮"); },
-          ),
-          Container(width: 16.0),
-          Theme(
-            data: ThemeData(
-              cardColor: Color(AppColors.AppBarColor),
-            ),
-            child: PopupMenuButton(
-            itemBuilder: (BuildContext context) {
-              return <PopupMenuItem<ActionItems>>[
-                PopupMenuItem(
-                  child: _build_PopupMunuItem(0xe63f, "发起群聊"),
-                  value: ActionItems.GROUP_CHAT
-                ),
-                PopupMenuItem(
-                  child: _build_PopupMunuItem(0xe618, "添加朋友"),
-                  value: ActionItems.ADD_FRIEND,
-                ),
-                PopupMenuItem(
-                  child: _build_PopupMunuItem(0xe650, "扫一扫"),
-                  value: ActionItems.QR_SCAN,
-                ),
-                PopupMenuItem(
-                  child: _build_PopupMunuItem(0xe685, "收付款"),
-                  value: ActionItems.PAYMENT,
-                ),
-                PopupMenuItem(
-                  child: _build_PopupMunuItem(0xe60c, "帮助与反馈"),
-                  value: ActionItems.HELP,
-                ),
-              ];
-            },
-            icon: Icon(IconData(
-              0xe657,
-              fontFamily: Constants.IconFontFamily,
-            ), size: 22.0, color: AppColors.ActionIconColor),
-            onSelected: (ActionItems selected) { print("点击的是$selected"); },
-          ),
-          ),
-          Container(width: 16.0),
-        ],
+        brightness: Brightness.light,
+        backgroundColor: widget.headerColor,
+        actions: _currentIndex == 3 ? _functionActions : _mainActions,
       ),
       body: PageView.builder(
         itemBuilder: (BuildContext context, int index) {
@@ -190,6 +234,24 @@ _build_PopupMunuItem(int iconName, String title) {
         onPageChanged: (int index) {
           setState(() {
             _currentIndex = index;
+            switch(index) {
+              case 0:
+                widget.title = Strings.TitleWechat;
+                widget.headerColor = HeaderColor;
+                break;
+              case 1:
+                widget.title = Strings.TitleContact;
+                widget.headerColor = HeaderColor;
+                break;
+              case 2:
+                widget.title = Strings.TitleDiscovery;
+                widget.headerColor = HeaderColor;
+                break;
+              case 3:
+                widget.title = '';
+                widget.headerColor = Colors.white;
+                break;
+            }
           });
         },
       ),

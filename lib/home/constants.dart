@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_wechat_clone/home/full_width_button.dart';
 
 // 颜色
 class AppColors {
+  static const PrimaryColor = 0xffebebeb;
+  static const ActionMenuBgColor = 0xff4c4c4c;
+  static const TitleColor = 0xff181818;
+  static const NewTagBg = 0xfffa5251;
+  static const ChatBoxBg = 0xfff7f7f7;
+  static const ChatBoxCursorColor = 0xff07c160;
+  static const ButtonArrowColor = 0xffadadad;
+  
   // 发现页面背景颜色
-  static const BackgroundColor = 0xffebebeb;
+  static const BackgroundColor = 0xffededed;
 
   static const AppBarColor = 0xff393a3f; 
-  static const TabIconActive = 0xff07c160;
-  static const TabIconNormal = 0xff454545;
+  static const TabIconActive = 0xff46c11b;
+  static const TabIconNormal = 0xff999999;
 
   // 微信聊天界面的加号里面的5个组件的背景
   static const AppBarAddColor = 0xff4c4c4c;
   static const AppBarPopupMenuColor = 0xffffffff;
-  static const ActionIconColor = Colors.white;
+  static const ActionIconColor = Colors.black;
   static const CardBgColor = Colors.white;
   // 聊天界面的默认字体颜色
   static const TitleTextColor = 0xff191919;
@@ -55,13 +62,23 @@ class AppColors {
 
 // 字体
 class AppStyles {
+  static const NewTagTextStyle = TextStyle(
+    fontSize: Constants.DesTextSize,
+    color: Colors.white,
+    fontWeight: FontWeight.bold
+  );
+  static const ChatBoxTextStyle = TextStyle(
+    fontSize: Constants.ContentTextSize,
+    color: const Color(AppColors.TitleColor)
+  );
+
   static const TitleStyle = TextStyle(
-    fontSize: 14.0,
-    color: Color(AppColors.TitleTextColor),
+    fontSize: Constants.TitleTextSize,
+    color: const Color(AppColors.TitleColor),
   );
   static const DesStyle = TextStyle(
-    fontSize: 12.0,
-    color: Color(AppColors.TitleTextColor),
+    fontSize: Constants.DesTextSize,
+    color: Color(AppColors.DesTextColor),
   );
   static const UnreadMsgCountDotStyle = TextStyle(
     fontSize: 12.0,
@@ -70,7 +87,7 @@ class AppStyles {
 
   // 设备登陆信息字体
   static const DeviceInfoItemTextStyle = TextStyle(
-    fontSize: 13.0,
+    fontSize: Constants.DesTextSize,
     color: Color(AppColors.DeivceInfoItemText),
   );
 
@@ -87,28 +104,44 @@ class AppStyles {
 
   // 我的页面的头像旁边的昵称字体
   static const HeaderCardTitleTextStyle = TextStyle(
-    fontSize: 14.0,
+    fontSize: 20.0,
     color: Color(AppColors.HeaderCardTitleText),
+    fontWeight: FontWeight.bold,
   );
     // 我的页面的头像旁边的微信号字体
   static const HeaderCardDesTextStyle = TextStyle(
-    fontSize: 12.0,
+    fontSize: 14.0,
     color: Color(AppColors.HeaderCardDesText),
+    fontWeight: FontWeight.normal,
   );
   // 我的页面的按钮提示信息字体
   static const ButtonDesTextStyle = TextStyle(
     fontSize: 12.0,
     color: Color(AppColors.ButtonDesText),
+    fontWeight: FontWeight.bold,
   );
+}
+
+class Routes {
+  static const Home = "/";
+  static const Conversation = "/conversation";
 }
 
 // 图标
 class Constants {
+  static const ActionIconSize = 20.0;
+  static const ActionIconSizeLarge = 32.0;
+  static const AvatarRadius = 4.0;
+  static const TitleTextSize = 16.0;
+  static const ContentTextSize = 20.0;
+  static const DesTextSize = 13.0;
+  static const ChatBoxHeight = 48.0;
+
   static const IconFontFamily = 'appIconFont';
   // 头像大小
   static const ConversationAvatarSize = 48.0;
   // 分割线宽度
-  static const DividerWidth = 1.0;
+  static const DividerWidth = 0.6;
   // 未读消息角标大小
   static const UnReadMsgNotifyDotSize = 20.0;
   // 勿扰模式图标大小
@@ -116,7 +149,7 @@ class Constants {
   // 设备登陆信息高度
   // static const DeviceInfoItemHeight = 32.0;
   // 通讯录头像大小
-  static const ContactAvatarSize = 36.0;
+  static const ContactAvatarSize = 42.0;
   // 通讯录首字母的索引值宽度
   static const IndexBarWidth = 24.0;
   // 通讯录首字母索引值在该页显示的大小
@@ -124,7 +157,7 @@ class Constants {
   // 通讯录首字母索引值圆角在该页显示的大小
   static const IndexLetterBoxRadius = 4.0;
   // 发现页面按钮大小设置
-  static const FullWidthIconButtonIconSize = 24.0;
+  static const FullWidthIconButtonIconSize = 25.0;
 
   // 微信聊天界面长按联系人的效果
   static const String MENU_MARK_AS_UNREAD = 'MENU_MARK_AS_UNREAD';

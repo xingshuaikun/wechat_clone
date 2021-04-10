@@ -15,9 +15,9 @@ class _ContactItem extends StatelessWidget {
   final String groupTitle;
   final VoidCallback onPressed;
 
-  static const double MARGIN_VERTICAL = 10.0;
-  // final double BUTTON_HEIGHT = 48.0;
-  static const double GROUP_TITLE_HEIGHT = 24.0;
+  static const double MARGIN_VERTICAL = 8.0;
+  static const double MARGIN_HORIZONTAL = 16.0;
+  static const double GROUP_TITLE_HEIGHT = 34.0;
 
   // 通讯录界面的图标来自网络还是本地
   bool get _isAvatarFromNet {
@@ -61,21 +61,26 @@ class _ContactItem extends StatelessWidget {
     // 列表项主体部分
     Widget _button = Container(
       // margin 用来设置盒子外边框
-      margin: const EdgeInsets.symmetric(horizontal: 16.0,),
-      padding: const EdgeInsets.symmetric(vertical: MARGIN_VERTICAL),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            width: Constants.DividerWidth, 
-            color: const Color(AppColors.DividerColor)
-          )
-        ),
-      ),
+      margin: const EdgeInsets.only(left: MARGIN_HORIZONTAL),
       child: Row(
-        children: <Widget> [
+        children: <Widget>[
           _avatarIcon,
-          SizedBox(width: 10.0),
-          Text(title),
+          SizedBox(width: 16.0),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.only(right: MARGIN_HORIZONTAL),
+              height: _ContactItem._height(false),
+              alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                      width: Constants.DividerWidth,
+                      color: const Color(AppColors.DividerColor)),
+                ),
+              ),
+              child: Text(title, style: AppStyles.TitleStyle, maxLines: 1),
+            ),
+          ),
         ],
       ),
     );
@@ -180,7 +185,7 @@ class _ContactsPageState extends State<ContactsPage> {
     super.dispose();
   }
 
-  String getLetter(BuildContext context, double tileHeight, Offset globalPos) {
+  String _getLetter(BuildContext context, double tileHeight, Offset globalPos) {
     RenderBox _box = context.findRenderObject();
     var local = _box.globalToLocal(globalPos);
     int index = (local.dy ~/ tileHeight).clamp(0, INDEX_BAR_WORDS.length - 1);
@@ -203,14 +208,7 @@ class _ContactsPageState extends State<ContactsPage> {
   Widget _buildIndexBar(BuildContext context, BoxConstraints constraints) {
     final List<Widget> _letters = INDEX_BAR_WORDS.map((String word) {
       return Expanded(
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: Color(AppColors.DividerColor), width: 1.0)
-            )
-          ),
           child: Text(word),
-        ),
       );
     }).toList();
 
@@ -222,7 +220,7 @@ class _ContactsPageState extends State<ContactsPage> {
       onVerticalDragDown: (DragDownDetails details) {
         setState(() {
           widget._indexBarBg = Colors.black26;
-          widget._currentLetter = getLetter(context, _tileHeight, details.globalPosition);
+          widget._currentLetter = _getLetter(context, _tileHeight, details.globalPosition);
           _jumpToIndex(widget._currentLetter);
         });
       },
@@ -240,11 +238,11 @@ class _ContactsPageState extends State<ContactsPage> {
           widget._currentLetter = null;
         });
       },
-      // 拖到图标触发
+      // 拖动图标触发
       onVerticalDragUpdate: (DragUpdateDetails details) {
         setState(() {
           widget._indexBarBg = Colors.black26;
-          widget._currentLetter = getLetter(context, _tileHeight, details.globalPosition);
+          widget._currentLetter = _getLetter(context, _tileHeight, details.globalPosition);
           _jumpToIndex(widget._currentLetter);
         });
       },
