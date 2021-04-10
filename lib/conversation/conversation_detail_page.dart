@@ -14,8 +14,11 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    // 与具体联系人聊天输入框左右边距
     final paddingH = 16.0;
+    // 与具体联系人聊天输入框上下边距
     final paddingV = 12.0;
+    // 与具体联系人聊天输入框圆角效果
     final chatBoxRadius = 4.0;
     final ConversationDetailArgs args = ModalRoute.of(context).settings.arguments;
 
@@ -55,6 +58,7 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
           SizedBox(width: 16.0)
         ],
       ),
+      // Column 代表列式布局
       body: Column(
         children: <Widget>[
           Expanded(
@@ -64,6 +68,7 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
           ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: paddingH, vertical: paddingV),
+            // decoration 用来加分界线
             decoration: BoxDecoration(
                 color: const Color(AppColors.ChatBoxBg),
                 border: Border(
@@ -86,6 +91,7 @@ class _ConversationDetailPageState extends State<ConversationDetailPage> {
                         color: AppColors.ActionIconColor
                     )
                 ),
+                // Expanded 表示撑满布局
                 Expanded(
                   child: Container(
                     margin: const EdgeInsets.only(left: 4.0, right: 4.0),

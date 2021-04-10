@@ -6,6 +6,7 @@ class AppColors {
   static const ActionMenuBgColor = 0xff4c4c4c;
   static const TitleColor = 0xff181818;
   static const NewTagBg = 0xfffa5251;
+  // 与具体联系人的聊天输入框背景颜色
   static const ChatBoxBg = 0xfff7f7f7;
   static const ChatBoxCursorColor = 0xff07c160;
   static const ButtonArrowColor = 0xffadadad;
@@ -130,11 +131,13 @@ class Routes {
 // 图标
 class Constants {
   static const ActionIconSize = 20.0;
+  // 与具体联系人语音、表情、更多功能按钮大小
   static const ActionIconSizeLarge = 32.0;
   static const AvatarRadius = 4.0;
   static const TitleTextSize = 16.0;
   static const ContentTextSize = 20.0;
   static const DesTextSize = 13.0;
+  // 与具体联系人聊天输入框的高度
   static const ChatBoxHeight = 48.0;
 
   static const IconFontFamily = 'appIconFont';

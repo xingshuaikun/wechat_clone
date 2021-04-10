@@ -211,7 +211,7 @@ class _DeviceInfoItem extends StatelessWidget {
 
   // 获取登陆信息的图标
   int get IconName {
-    return device == Device.WIN ? 0xe86f : 0xe640;
+    return device == Device.WIN ? 0xe6b3 : 0xe61c;
   }
 
   String get deviceName {

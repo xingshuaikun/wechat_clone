@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
       IconButton(
         icon: Icon(
             IconData(
-              0xe7d2,
+              0xe65e,
               fontFamily: Constants.IconFontFamily,
             ),
             size: Constants.ActionIconSize,
@@ -66,30 +66,30 @@ class _HomeScreenState extends State<HomeScreen> {
           itemBuilder: (BuildContext context) {
             return <PopupMenuItem<ActionItems>>[
               PopupMenuItem(
-                child: _buildPopupMunuItem(0xe63f, Strings.MenuGroupChat),
+                child: _buildPopupMunuItem(0xe69e, Strings.MenuGroupChat),
                 value: ActionItems.GROUP_CHAT,
               ),
               PopupMenuItem(
-                child: _buildPopupMunuItem(0xe618, Strings.MenuAddFriends),
+                child: _buildPopupMunuItem(0xe638, Strings.MenuAddFriends),
                 value: ActionItems.ADD_FRIEND,
               ),
               PopupMenuItem(
-                child: _buildPopupMunuItem(0xe650, Strings.MenuQRScan),
+                child: _buildPopupMunuItem(0xe61b, Strings.MenuQRScan),
                 value: ActionItems.QR_SCAN,
               ),
               PopupMenuItem(
-                child: _buildPopupMunuItem(0xe685, Strings.MenuPayments),
+                child: _buildPopupMunuItem(0xe62a, Strings.MenuPayments),
                 value: ActionItems.PAYMENT,
               ),
               PopupMenuItem(
-                child: _buildPopupMunuItem(0xe60c, Strings.MenuHelp),
+                child: _buildPopupMunuItem(0xe63d, Strings.MenuHelp),
                 value: ActionItems.HELP,
               ),
             ];
           },
           icon: Icon(
               IconData(
-                0xe657,
+                0xe60e,
                 fontFamily: Constants.IconFontFamily,
               ),
               size: Constants.ActionIconSize + 4.0,
@@ -121,44 +121,44 @@ class _HomeScreenState extends State<HomeScreen> {
       NavigationIconView(
         title: Strings.TitleWechat,
         icon: IconData(
-          0xe600,
+          0xe608,
           fontFamily: Constants.IconFontFamily,
         ),
         activeIcon: IconData(
-          0xe608,
+          0xe603,
           fontFamily: Constants.IconFontFamily,
         ),
       ),
       NavigationIconView(
         title: Strings.TitleContact,
         icon: IconData(
-          0xe6af,
+          0xe601,
           fontFamily: Constants.IconFontFamily,
         ),
         activeIcon: IconData(
-          0xe6c2,
+          0xe656,
           fontFamily: Constants.IconFontFamily,
         ),
       ),
       NavigationIconView(
         title: Strings.TitleDiscovery,
         icon: IconData(
-          0xe629,
+          0xe600,
           fontFamily: Constants.IconFontFamily,
         ),
         activeIcon: IconData(
-          0xe62a,
+          0xe671,
           fontFamily: Constants.IconFontFamily,
         ),
       ),
       NavigationIconView(
         title: Strings.TitleMe,
         icon: IconData(
-          0xe67b,
+          0xe6c0,
           fontFamily: Constants.IconFontFamily,
         ),
         activeIcon: IconData(
-          0xe60f,
+          0xe626,
           fontFamily: Constants.IconFontFamily,
         ),
       ),
